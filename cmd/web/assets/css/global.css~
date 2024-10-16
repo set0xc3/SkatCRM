@@ -1,0 +1,76 @@
+body {
+	background-color: #EDEFF0;
+	margin: 0;
+	padding: 0;
+}
+
+body .wrap {
+	max-width: 1280px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.wrap {
+	margin-top: 8px;
+	margin-bottom: 8px;
+	padding: 8px;
+	border: 1px solid red;
+}
+
+header {
+	background-color: white;
+}
+
+header .wrap {
+	height: 42px;
+
+	/* Используем flexbox для выравнивания элементов */
+	display: flex;
+
+	/* Выравнивание по вертикали */
+	align-items: center;
+}
+
+header .wrap .right {
+	margin-left: auto;
+}
+
+main .left-panel {
+	/* Обтекание слева */
+	float: left;
+
+	width: 250px;
+	padding-right: 5px;
+}
+
+main .left-panel .wrap {
+	border-radius: 5px;
+	background-color: white;
+}
+
+main .grid-items .wrap {
+	display: flex;
+	flex-wrap: wrap;
+	overflow: visible;
+	justify-content: flex-start;
+	align-items: flex-start;
+	border-radius: 5px;
+}
+
+main .grid-items .wrap div {
+	flex: 1 1 200px;
+	height: 300px;
+	margin: 5px;
+	border: 1px solid red;
+	border-radius: 5px;
+}
+
+nav {
+	display: flex;
+	gap: 20px;
+}
+
+nav a {
+	text-decoration: none;
+	color: #293240;
+}

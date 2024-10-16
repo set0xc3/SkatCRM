@@ -1,0 +1,9 @@
+package web
+
+templ TodoList() {
+<h1>Todo App</h1>
+<!-- Todo List will be loaded here -->
+<div id="todo-list" hx-get="/todos" hx-trigger="load">
+	Loading todos...
+</div>
+}

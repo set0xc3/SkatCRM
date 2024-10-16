@@ -1,0 +1,64 @@
+package web
+
+templ Base() {
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Go Blueprint Hello</title>
+	<link href="assets/css/global.css" rel="stylesheet" />
+	<script src="assets/js/htmx.min.js"></script>
+</head>
+
+<body>
+	<header>
+		<div class="wrap">
+			<!-- Левая часть -->
+			<nav class="left">
+				<a href="#">Главная</a>
+				<a href="#">Каталог</a>
+				<a href="#">Контакты</a>
+				<a href="#">О нас</a>
+			</nav>
+			<!-- Правая часть -->
+			<nav class="right">
+				<button>[Store]</button>
+				<button>[Account]</button>
+			</nav>
+		</div>
+	</header>
+	<main>
+		<div class="layout">
+			<div class="wrap">
+				<div class="left-panel">
+					<div class="wrap"></div>
+				</div>
+				<div class="grid-items">
+					<div class="wrap">
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+						<div class="div"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+	<footer>
+		<div class="wrap">
+			FOOTER
+		</div>
+	</footer>
+</body>
+
+</html>
+}
