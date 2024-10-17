@@ -16,9 +16,7 @@ func (s *Server) RegisterRoutes() http.Handler {
 
 	mux := http.NewServeMux()
 	mux.Handle("/", templ.Handler(web.Base()))
-	mux.Handle("/assets/", fileServer)
-
-	mux.HandleFunc("/todos", web.TodoListHandler)
+	mux.Handle("/static/", fileServer)
 
 	return mux
 }
