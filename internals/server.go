@@ -1,4 +1,4 @@
-package server
+package internals
 
 import (
 	"fmt"
@@ -15,7 +15,6 @@ func NewServer() *http.Server {
 		port: 8080,
 	}
 
-	// Declare Server config
 	server := &http.Server{
 		Addr:         fmt.Sprintf(":%d", NewServer.port),
 		Handler:      NewServer.RegisterRoutes(),
