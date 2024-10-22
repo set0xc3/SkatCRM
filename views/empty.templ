@@ -1,6 +1,15 @@
 package views
 
+import "github.com/set0xc3/htmx/views/components"
+
+templ EmptyHead() {
+<link href="static/css/test2.css" rel="stylesheet" />
+}
+
+templ EmptyBody() {
+@components.NavBar()
+}
+
 templ Empty() {
-@Base()
-Empty
+@Base(EmptyHead(), EmptyBody())
 }

@@ -1,5 +1,15 @@
 package views
 
+import "github.com/set0xc3/htmx/views/components"
+
+templ HomeHead() {
+<link href="static/css/test2.css" rel="stylesheet" />
+}
+
+templ HomeBody() {
+@components.NavBar()
+}
+
 templ Home() {
-@Base()
+@Base(HomeHead(), HomeBody())
 }

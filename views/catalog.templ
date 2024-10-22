@@ -1,28 +1,31 @@
 package views
 
-templ Catalog() {
+import "github.com/set0xc3/htmx/views/components"
 
-<head>
-	<link href="static/css/catalog_tmp.css" rel="stylesheet" />
-</head>
-@Base()
-<nav>
-	<!-- Left -->
-	<div id="nav-left">
-		<a href="#">Главная</a>
-		<a href="#">Каталог</a>
-		<a href="#">Контакты</a>
-		<a href="#">О нас</a>
-	</div>
-	<!-- Right -->
-	<div id="nav-right">
-		<button>[Store]</button>
-		<button>[Account]</button>
-	</div>
-</nav>
+templ CatalogHead() {
+<link href="static/css/test2.css" rel="stylesheet" />
+}
+
+templ CatalogBody() {
+@components.NavBar()
 <aside>Sidebar</aside>
 <main>
-	Catalog
+	<div class="container">
+		<div class="item">1</div>
+		<div class="item">2</div>
+		<div class="item">3</div>
+		<div class="item">4</div>
+		<div class="item">5</div>
+		<div class="item">6</div>
+		<div class="item">7</div>
+		<div class="item">8</div>
+		<div class="item">9</div>
+		<div class="item">10</div>
+	</div>
 </main>
-<footer>Footer</footer>
+@components.Footer()
+}
+
+templ Catalog() {
+@Base(CatalogHead(), CatalogBody())
 }
