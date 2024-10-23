@@ -23,6 +23,7 @@
         templ
         air
         go
+        pocketbase
       ];
 
       shellHook = ''

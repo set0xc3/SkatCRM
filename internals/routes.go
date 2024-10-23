@@ -9,6 +9,7 @@ import (
 	// "github.com/aarol/reload"
 
 	"github.com/set0xc3/htmx"
+	"github.com/set0xc3/htmx/internals/handlers"
 	"github.com/set0xc3/htmx/views"
 )
 
@@ -22,6 +23,9 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.Handle("/catalog", templ.Handler(views.Catalog()))
 	mux.Handle("/contacts", templ.Handler(views.Empty()))
 	mux.Handle("/about", templ.Handler(views.Empty()))
+
+	mux.HandleFunc("GET /api/v1/products", handlers.GetProducts)
+
 
 	return mux
 }

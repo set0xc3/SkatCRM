@@ -1,6 +1,33 @@
 package views
 
-import "github.com/set0xc3/htmx/views/components"
+import (
+"fmt"
+"github.com/set0xc3/htmx/views/components"
+)
+
+type Product struct {
+name string
+price string
+}
+
+var products = [10]Product{
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
+}
+
+templ CatalogProducts(items []Product) {
+for i, item := range items {
+<div class="item">{ fmt.Sprintf("%s-%d", item.name, i) }</div>
+}
+}
 
 templ CatalogHead() {
 <link href="static/css/test2.css" rel="stylesheet" />
@@ -11,16 +38,8 @@ templ CatalogBody() {
 <aside>Sidebar</aside>
 <main>
 	<div class="container">
-		<div class="item">1</div>
-		<div class="item">2</div>
-		<div class="item">3</div>
-		<div class="item">4</div>
-		<div class="item">5</div>
-		<div class="item">6</div>
-		<div class="item">7</div>
-		<div class="item">8</div>
-		<div class="item">9</div>
-		<div class="item">10</div>
+		// <div hx-get="/api/v1/products" hx-trigger="load"></div>
+		@CatalogProducts(products[:])
 	</div>
 </main>
 @components.Footer()
