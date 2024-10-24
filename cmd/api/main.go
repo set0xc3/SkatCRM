@@ -9,11 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/set0xc3/htmx/internals"
+	"github.com/set0xc3/htmx/internal/server"
 )
 
 func main() {
-	server := internals.NewServer()
+	server := server.New()
 
 	go gracefulShutdown(server)
 
