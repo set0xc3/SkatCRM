@@ -2,30 +2,30 @@ package views
 
 import (
 "fmt"
+"github.com/set0xc3/htmx/internal/db"
 "github.com/set0xc3/htmx/views/components"
 )
 
-type Product struct {
-name string
-price string
-}
-
-var products = [10]Product{
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-{"Сварочный инвертор PRO ARC 160 (Z211S)", "17750"},
-}
-
-templ CatalogProducts(items []Product) {
-for i, item := range items {
-<div class="item">{ fmt.Sprintf("%s-%d", item.name, i) }</div>
+templ CatalogProducts() {
+for i, product := range db.FetchProducts() {
+<div class="item">
+	<img src="static/store/1271f2316d89bbb3f6e3581bd8ec8cb1.png" />
+	<div class="item-container">
+		<div class="top">
+			{ fmt.Sprintf("%s-%d", product.Name, i) }
+		</div>
+		<div class="middle">
+			<a>В наличии:</a>
+			<a>5 шт.</a>
+			<a>17750 руб.</a>
+		</div>
+		<div class="buttons">
+			<button id="button-1">Купить</button>
+			<button id="button-2">-</button>
+			<button id="button-3">-</button>
+		</div>
+	</div>
+</div>
 }
 }
 
@@ -38,8 +38,7 @@ templ CatalogBody() {
 <aside>Sidebar</aside>
 <main>
 	<div class="container">
-		// <div hx-get="/api/v1/products" hx-trigger="load"></div>
-		@CatalogProducts(products[:])
+		@CatalogProducts()
 	</div>
 </main>
 @components.Footer()

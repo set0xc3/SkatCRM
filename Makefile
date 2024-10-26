@@ -21,11 +21,11 @@ build: templ-install
 	@echo "Building..."
 	@templ generate
 	
-	@go build -o ./tmp/main.bin ./cmd/api/main.go
+	@go build -o ./tmp/main.bin ./cmd/server/main.go
 
 # Run the application
 run:
-	@go run ./cmd/api/main.go
+	@go run ./cmd/server/main.go
 
 # Test the application
 test:

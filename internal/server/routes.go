@@ -1,12 +1,9 @@
 package server
 
 import (
-	// "encoding/json"
-	// "log"
 	"net/http"
 
 	"github.com/a-h/templ"
-	// "github.com/aarol/reload"
 
 	"github.com/set0xc3/htmx"
 	"github.com/set0xc3/htmx/views"
@@ -23,8 +20,8 @@ func (s *Server) RegisterRoutes() http.Handler {
 	mux.Handle("/contacts", templ.Handler(views.Empty()))
 	mux.Handle("/about", templ.Handler(views.Empty()))
 
-	mux.HandleFunc("GET /api/v1/products", GetProducts)
-
+	mux.HandleFunc("GET /api/v1/products", RedirectToAPI)
+	mux.HandleFunc("GET /api/v1/product/{id}", RedirectToAPI)
 
 	return mux
 }
