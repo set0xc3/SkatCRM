@@ -1,45 +1,27 @@
 package main
 
 import (
-	"context"
-	"fmt"
-	"log"
-	"net/http"
-	"os/signal"
-	"syscall"
-	"time"
-
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/set0xc3/htmx/internal"
 	"github.com/set0xc3/htmx/internal/server"
+	"github.com/set0xc3/htmx/internal/server/handlers"
 )
 
 func main() {
-	server := server.New()
+	s := server.New()
 
-	go gracefulShutdown(server)
+	// Echo instance
+	e := echo.New()
 
-	err := server.ListenAndServe()
-	if err != nil && err != http.ErrServerClosed {
-		panic(fmt.Sprintf("http server error: %s", err))
-	}
-}
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-func gracefulShutdown(apiServer *http.Server) {
-	// Create context that listens for the interrupt signal from the OS.
-	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
-	defer stop()
+	// Routes
+	e.Static("/", "static")
+	e.GET("/", handlers.GetIndexPage)
 
-	// Listen for the interrupt signal.
-	<-ctx.Done()
-
-	log.Println("[shutdown] shutting down gracefully, press Ctrl+C again to force")
-
-	// The context is used to inform the server it has 5 seconds to finish
-	// the request it is currently handling
-	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
-	defer cancel()
-	if err := apiServer.Shutdown(ctx); err != nil {
-		log.Printf("[shutdown] Server forced to shutdown with error: %v", err)
-	}
-
-	log.Println("[shutdown] Server exiting")
+	// Start server
+	internal.GracefulShutdown(e, s.Port)
 }

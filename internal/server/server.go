@@ -1,29 +1,31 @@
 package server
 
 import (
-	"fmt"
-	"net/http"
-	"time"
+	"log"
+	"os"
+	"strings"
+
+	"github.com/joho/godotenv"
 )
 
-type Server struct {
-	host string
-	port string
+type Context struct {
+	Host string
+	Port string
 }
 
-func New() *http.Server {
-	ctx := &Server{
-		host: "localhost",
-		port: "8080",
+func New() (ctx Context) {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
 	}
 
-	ret := &http.Server{
-		Addr:         fmt.Sprintf("%s:%s", ctx.host, ctx.port),
-		Handler:      Logging(ctx.RegisterRoutes()),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
+	ctx = Context{
+		Host: os.Getenv("SERVER_HOST"),
+		Port: os.Getenv("SERVER_PORT"),
 	}
 
-	return ret
+	if !strings.HasPrefix(ctx.Port, ":") {
+		ctx.Port = ":" + ctx.Port
+	}
+	return
 }
