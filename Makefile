@@ -3,5 +3,8 @@ build:
 	templ generate
 	go build -ldflags "-s -w" -o bin/server/main.bin cmd/server/main.go
 
+tw:
+	@npx tailwindcss -i input.css -o static/css/tw.css --watch
+
 dev:
-	@templ generate -watch -open-browser=false -cmd="go run cmd/server/main.go"
+	@templ generate -watch -proxyport=7332 -proxy="http://localhost:8080" -open-browser=false -cmd="go run cmd/server/main.go"

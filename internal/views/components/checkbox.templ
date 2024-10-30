@@ -1,0 +1,20 @@
+package components
+
+import "github.com/set0xc3/htmx/internal/model"
+
+templ Checkbox(checkbox model.Checkbox) {
+	<label class="label cursor-pointer space-x-2">
+		<span class="label-text">
+			{ checkbox.Label }
+		</span>
+		<input
+			{ checkbox.Attrs... }
+			type="checkbox"
+			name={ checkbox.Name }
+			if checkbox.Checked {
+				checked="checked"
+			}
+			class={ "checkbox", checkbox.Class }
+		/>
+	</label>
+}

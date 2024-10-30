@@ -21,6 +21,11 @@ func main() {
 	// Routes
 	e.Static("/", "static")
 	e.GET("/", handlers.GetIndexPage)
+	e.GET("/clients", handlers.GetClientsPage)
+
+	// API
+	e.GET("/api/v1/clients", handlers.RedirectToDB)
+	e.DELETE("/api/v1/client/:id", handlers.StatusOK)
 
 	// Start server
 	internal.GracefulShutdown(e, s.Port)

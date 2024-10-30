@@ -1,0 +1,49 @@
+package pages
+
+import (
+"fmt"
+"github.com/set0xc3/htmx/internal/api"
+)
+
+templ ClientsTable() {
+<div class="overflow-x-auto">
+	<table class="table">
+		<!-- head -->
+		<thead>
+			<tr>
+				<th></th>
+				<th>Name</th>
+				<th>Phone</th>
+			</tr>
+		</thead>
+		<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
+			for i, item := range api.FetchClients() {
+			<tr>
+				<td>{ fmt.Sprintf("%d", i+1) }</td>
+				<td>{ item.Name }</td>
+				<td>{ item.Phone }</td>
+				<td><button class="btn" hx-delete={ "/api/v1/client/" + item.Id }>Delete</button></td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
+}
+
+templ ClientsPage() {
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>MySite</title>
+	<link href="css/tw.css" rel="stylesheet" />
+	<script src="js/htmx.min.js"></script>
+</head>
+
+<body hx-boost="true">
+	@ClientsTable()
+</body>
+
+</html>
+}
