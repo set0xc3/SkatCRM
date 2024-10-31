@@ -6,7 +6,9 @@
 	- replace the package with your own repository!
 - Get Go modules:
 	- `go get -u github.com/labstack/echo/v4`
-	- `go get -u github.com/a-h/templ`
+	- `go get -u github.com/pocketbase/pocketbase`
+	- `go get -u github.com/joho/godotenv`
+	- `go get -u github.com/golang-jwt/jwt`
 - Install Templ CLI:
 	- `go install github.com/a-h/templ/cmd/templ@latest`
 - Install TailwindCSS and DaisyUI:
