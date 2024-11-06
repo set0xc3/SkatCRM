@@ -1,8 +1,6 @@
 package pages
 
-import (
-"github.com/set0xc3/htmx/internal/api"
-)
+import "github.com/set0xc3/htmx/internal/api"
 
 templ ClientsTable() {
 <div class="overflow-x-auto">
@@ -10,47 +8,25 @@ templ ClientsTable() {
 		<!-- head -->
 		<thead>
 			<tr>
-				<th>Id</th>
-				<th>Id2</th>
 				<th>Метка</th>
-				<th>Контрагент</th>
 				<th>ФИО</th>
-				<th>Тип</th>
-				<th>Телефоны</th>
-				<th>Эл. адрес</th>
-				<th>Юр. адрес</th>
-				<th>Физ. адрес</th>
-				<th>Дата регистрации</th>
-				<th>Рекламный канал</th>
-				<th>Регистрационные данные 1</th>
-				<th>Регистрационные данные 2</th>
-				<th>Примечание</th>
+				<th>Телефон</th>
+				<th>Адрес</th>
+				<th>Эл.почта</th>
 				<th>Количество обращений</th>
-				<th>День рождения</th>
-				<th>Доход от клиента</th>
+				<th>Дата регистрации</th>
 			</tr>
 		</thead>
 		<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
 			for _, item := range api.FetchClients() {
 			<tr>
-				<td>{ item.Id }</td>
-				<td>{ item.Id2 }</td>
 				<td>{ item.Mark }</td>
-				<td>{ item.Contractor }</td>
 				<td>{ item.FullName }</td>
-				<td>{ item.Type }</td>
 				<td>{ item.Phones }</td>
-				<td>{ item.Email }</td>
 				<td>{ item.LegalAddress }</td>
-				<td>{ item.PhysicalAddress }</td>
+				<td>{ item.Email }</td>
 				<td>{ item.RegistrationDate }</td>
-				<td>{ item.AdChannel }</td>
-				<td>{ item.RegData1 }</td>
-				<td>{ item.RegData2 }</td>
-				<td>{ item.Note }</td>
 				<td>{ item.RequestCount }</td>
-				<td>{ item.Birthday }</td>
-				<td>{ item.Income }</td>
 				<td><button class="btn" hx-delete={ "/api/v1/client/" + item.Id }>Delete</button></td>
 			</tr>
 			}
