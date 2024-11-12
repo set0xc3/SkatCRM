@@ -6,6 +6,7 @@ import (
 	"github.com/set0xc3/htmx/internal"
 	"github.com/set0xc3/htmx/internal/server"
 	"github.com/set0xc3/htmx/internal/server/handlers"
+	"github.com/set0xc3/htmx/internal/views/cms/pages"
 )
 
 func main() {
@@ -22,6 +23,10 @@ func main() {
 	e.Static("/", "static")
 	e.GET("/", handlers.GetIndexPage)
 	e.GET("/clients", handlers.GetClientsPage)
+
+	e.GET("/cms", func(c echo.Context) error {
+		return handlers.Render(c, cms.IndexPage())
+	})
 
 	// API
 	e.GET("/api/v1/clients", handlers.RedirectToDB)
