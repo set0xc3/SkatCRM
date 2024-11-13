@@ -2,28 +2,22 @@ package pages
 
 import "github.com/set0xc3/htmx/internal/api"
 
-templ ClientsTable() {
+templ ProductsTable() {
 <div class="overflow-x-auto">
 	<table class="table">
 		<!-- head -->
 		<thead>
 			<tr>
-				<th>Метка</th>
-				<th>ФИО</th>
-				<th>Телефон</th>
-				<th>Адрес</th>
-				<th>Эл.почта</th>
+				<th></th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
-			for _, item := range api.FetchClients() {
+			for _, item := range api.FetchProducts() {
 			<tr>
-				<td>{ item.Mark }</td>
-				<td>{ item.FullName }</td>
-				<td>{ item.Phones }</td>
-				<td>{ item.LegalAddress }</td>
-				<td>{ item.Email }</td>
-				<td><button class="btn" hx-delete={ "/api/v1/client/" + item.Id }>Delete</button></td>
+				<td>{ item.Id }</td>
+				<td>{ item.Id2 }</td>
+				<td><button class="btn" hx-delete={ "/api/v1/product/" + item.Id }>Delete</button></td>
 			</tr>
 			}
 		</tbody>
@@ -31,7 +25,7 @@ templ ClientsTable() {
 </div>
 }
 
-templ ClientsPage() {
+templ ProductsPage() {
 <!DOCTYPE html>
 <html data-theme="light" lang="en">
 
@@ -43,7 +37,7 @@ templ ClientsPage() {
 </head>
 
 <body hx-boost="true">
-	@ClientsTable()
+	@ProductsTable()
 </body>
 
 </html>

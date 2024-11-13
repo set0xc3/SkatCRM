@@ -7,6 +7,7 @@ import (
 	"github.com/set0xc3/htmx/internal/server"
 	"github.com/set0xc3/htmx/internal/server/handlers"
 	"github.com/set0xc3/htmx/internal/views/cms/pages"
+	"github.com/set0xc3/htmx/internal/views/pages"
 )
 
 func main() {
@@ -23,14 +24,24 @@ func main() {
 	e.Static("/", "static")
 	e.GET("/", handlers.GetIndexPage)
 	e.GET("/clients", handlers.GetClientsPage)
+	e.GET("/products", func(c echo.Context) error {
+		return handlers.Render(c, pages.ProductsPage())
+	})
 
 	e.GET("/cms", func(c echo.Context) error {
 		return handlers.Render(c, cms.IndexPage())
 	})
+	e.GET("/test", func(c echo.Context) error {
+		return handlers.Render(c, cms.TEST_CMS_IndexPage())
+	})
+	e.GET("/status/ok", handlers.StatusOK)
 
 	// API
 	e.GET("/api/v1/clients", handlers.RedirectToDB)
 	e.DELETE("/api/v1/client/:id", handlers.StatusOK)
+
+	e.GET("/api/v1/products", handlers.RedirectToDB)
+	e.DELETE("/api/v1/product/:id", handlers.StatusOK)
 
 	// Start server
 	internal.GracefulShutdown(e, s.Port)

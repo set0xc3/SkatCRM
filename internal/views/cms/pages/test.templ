@@ -1,0 +1,109 @@
+// hx-on-htmx-after-swap="
+// this.classList.add('active')
+// "
+
+package cms
+
+import (
+"github.com/set0xc3/htmx/internal/model"
+"github.com/set0xc3/htmx/internal/views/icons"
+)
+
+// Создаем список элементов меню
+var menuItems = []model.MenuItem{
+{
+Name: "Главная",
+URL: "/",
+Icon: icons.HomeIcon,
+},
+{
+Name: "Клиенты",
+URL: "/clients",
+Icon: icons.ClientsIcon,
+},
+{
+Name: "Звонки",
+URL: "/calls",
+Icon: icons.CallsIcon,
+},
+{
+Name: "Заявки",
+URL: "/app",
+Icon: icons.AppIcon,
+},
+{
+Name: "Отчёты",
+URL: "/reports",
+Icon: icons.ReportsIcon,
+},
+{
+Name: "Товары",
+URL: "/products",
+Icon: icons.WarehouseIcon,
+},
+}
+
+templ SidebarComponent(items []model.MenuItem) {
+<aside class="menu bg-base-200 rounded-[5px] w-[150px] min-h-screen bg-white p-[8px] m-0">
+	<ul class="flex flex-col m-0 p-0 gap-[5px]">
+		for _, item := range items {
+		<li>
+			<a class={ "bg-[#F0F1F2] hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 py-2 flex items-center h-[28px] rounded-[5px] pl-[5px]"
+				} hx-get={ item.URL } hx-swap="innerHTML" hx-target="main">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ item.Icon }></path>
+				</svg>
+				{ item.Name }
+			</a>
+		</li>
+		}
+	</ul>
+</aside>
+}
+
+templ TEST_CMS_Navbar() {
+<!-- Navbar -->
+<nav class="h-[24px] bg-base-200 flex items-center bg-white">
+	<ul class="menu lg:menu-horizontal flex items-center justify-start h-full m-0 p-0 m-0">
+		<li class="h-full">
+			<a class="rounded-none text-center flex items-center justify-center h-full m-0 p-0 p-[5px]">File</a>
+		</li>
+		<li class="h-full">
+			<a class="rounded-none text-center flex items-center justify-center h-full m-0 p-0 p-[5px]">Edit</a>
+		</li>
+		<li class="h-full">
+			<a class="rounded-none text-center flex items-center justify-center h-full m-0 p-0 p-[5px]">Help</a>
+		</li>
+	</ul>
+</nav>
+}
+
+templ TEST_CMS_Sidebar() {
+@SidebarComponent(menuItems)
+}
+
+templ TEST_CMS_IndexPage() {
+<!DOCTYPE html>
+<html data-theme="light" lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>MySite</title>
+	<link href="css/tw.css" rel="stylesheet" />
+	<script src="js/htmx.min.js"></script>
+</head>
+
+<body hx-boost="true" class="flex flex-col h-full gap-[2px] bg-[#CDD2D6]">
+	//<div hx-get="/clients" hx-trigger="load" hx-swap="innerHTML" hx-target="main"></div>
+	@CMS_Navbar()
+	<div class="flex flex-1 gap-[2px]">
+		@TEST_CMS_Sidebar()
+		<!-- Main Content -->
+		<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white">
+			<p>This is where the main content goes.</p>
+		</main>
+	</div>
+</body>
+
+</html>
+}

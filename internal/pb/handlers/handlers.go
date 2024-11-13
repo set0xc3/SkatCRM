@@ -32,6 +32,24 @@ func SetRecordClientData(record *models.Record, client db.Client) {
 	record.Set("income", client.Income)
 }
 
+func SetRecordProductData(record *models.Record, product db.Product) {
+	record.Set("id2", product.Id2)
+	record.Set("name", product.Name)
+	record.Set("serial_number", product.SerialNumber)
+	record.Set("article", product.Article)
+	record.Set("date", product.Date)
+	record.Set("quantity", product.Quantity)
+	record.Set("retail_price", product.RetailPrice)
+	record.Set("purchase_price", product.PurchasePrice)
+	record.Set("exchange_rate_pc", product.ExchangeRatePC)
+	record.Set("exchange_rate_pr", product.ExchangeRatePR)
+	record.Set("warehouse", product.Warehouse)
+	record.Set("location", product.Location)
+	record.Set("customer_order", product.CustomerOrder)
+	record.Set("supplier_order", product.SupplierOrder)
+	record.Set("Supplier", product.Supplier)
+}
+
 func GetProducts(ctx *pb.PocketBase) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		query := ctx.Dao().RecordQuery("product")
@@ -95,6 +113,76 @@ func GetClient(ctx *pb.PocketBase) echo.HandlerFunc {
 		data = record.PublicExport()
 
 		return c.JSON(http.StatusOK, data)
+	}
+}
+
+func PostAddProduct(ctx *pb.PocketBase) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var product db.Product
+
+		if err := c.Bind(&product); err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid input"})
+		}
+
+		query := ctx.Dao().RecordQuery("product")
+		record := models.Record{}
+		if err := query.One(&record); err != nil {
+			collection, err := ctx.Dao().FindCollectionByNameOrId("product")
+			if err != nil {
+				return err
+			}
+
+			record := models.NewRecord(collection)
+			SetRecordProductData(record, product)
+
+			if err := ctx.Dao().SaveRecord(record); err != nil {
+				return c.NoContent(http.StatusNoContent)
+			}
+			return c.NoContent(http.StatusInternalServerError)
+		}
+
+		product2 := db.Product{}
+		err := ctx.Dao().DB().
+			NewQuery("SELECT id2 FROM product WHERE id2 = {:id2}").
+			Bind(dbx.Params{"id2": product.Id2}).
+			One(&product2)
+		if err != nil {
+			collection, err := ctx.Dao().FindCollectionByNameOrId("product")
+			if err != nil {
+				return err
+			}
+
+			record := models.NewRecord(collection)
+			SetRecordProductData(record, product)
+
+			if err := ctx.Dao().SaveRecord(record); err != nil {
+				return c.NoContent(http.StatusNoContent)
+			}
+
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Not Found"})
+		}
+
+		return c.String(http.StatusOK, "")
+	}
+}
+
+func DeleteProduct(ctx *pb.PocketBase) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		id := c.PathParam("id")
+
+		// Выполняем запрос на удаление клиента
+		_, err := ctx.Dao().DB().
+			NewQuery("DELETE FROM product WHERE id = {:id}").
+			Bind(dbx.Params{"id": id}).
+			Execute()
+
+		if err != nil {
+			// Логируем ошибку для диагностики
+			log.Printf("Error deleting product with id %s: %v\n", id, err)
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Error deleting product"})
+		}
+
+		return c.NoContent(http.StatusNoContent)
 	}
 }
 

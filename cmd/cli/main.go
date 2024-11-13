@@ -13,33 +13,76 @@ import (
 
 var FILE_PATH string
 
-func SendClient(url string, data interface{}) error {
-	// Сериализуем данные в JSON
-	jsonData, err := json.Marshal(data)
+func ReadProductFromFile(file_path string) {
+	file, err := excelize.OpenFile(FILE_PATH)
 	if err != nil {
-		return err
+		fmt.Println(err)
+		return
 	}
 
-	// Отправляем POST-запрос с JSON-данными
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	// Get all the rows in the Sheet1.
+	rows, err := file.GetRows("Складские остатки")
 	if err != nil {
-		return err
-	}
-	defer resp.Body.Close()
-
-	// Проверяем статус ответа
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("failed to add client: %s", resp.Status)
+		fmt.Println(err)
+		return
 	}
 
-	return nil
+	// Пропускаем заголовок и обрабатываем каждую строку
+	for i, row := range rows {
+		if i == 0 {
+			continue
+		}
+		product := db.Product{}
+		product.Id2 = row[0]
+		if len(row) > 1 {
+			product.Name = row[1]
+		}
+		if len(row) > 2 {
+			product.SerialNumber = row[2]
+		}
+		if len(row) > 3 {
+			product.Article = row[3]
+		}
+		if len(row) > 4 {
+			product.Date = row[4]
+		}
+		if len(row) > 5 {
+			product.Quantity = row[5]
+		}
+		if len(row) > 6 {
+			product.RetailPrice = row[6]
+		}
+		if len(row) > 7 {
+			product.PurchasePrice = row[7]
+		}
+		if len(row) > 8 {
+			product.ExchangeRatePC = row[8]
+		}
+		if len(row) > 9 {
+			product.ExchangeRatePR = row[9]
+		}
+		if len(row) > 10 {
+			product.Warehouse = row[10]
+		}
+		if len(row) > 11 {
+			product.Location = row[11]
+		}
+		if len(row) > 12 {
+			product.CustomerOrder = row[12]
+		}
+		if len(row) > 13 {
+			product.SupplierOrder = row[13]
+		}
+		if len(row) > 14 {
+			product.Supplier = row[14]
+		}
+
+		SendToDB("http://localhost:8090/api/v1/product", product)
+	}
+
 }
 
-func main() {
-	if len(os.Args) > 1 {
-		FILE_PATH = os.Args[1]
-	}
-
+func ReadClientFromFile(file_path string) {
 	file, err := excelize.OpenFile(FILE_PATH)
 	if err != nil {
 		fmt.Println(err)
@@ -109,7 +152,38 @@ func main() {
 			client.Income = row[16]
 		}
 
-		SendClient("http://localhost:8090/api/v1/client", client)
+		SendToDB("http://localhost:8090/api/v1/client", client)
 	}
 
+}
+
+func SendToDB(url string, data interface{}) error {
+	// Сериализуем данные в JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	// Отправляем POST-запрос с JSON-данными
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Проверяем статус ответа
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("failed to add: %s", resp.Status)
+	}
+
+	return nil
+}
+
+func main() {
+	if len(os.Args) > 1 {
+		FILE_PATH = os.Args[1]
+	}
+
+	// ReadClientFromFile(FILE_PATH)
+	ReadProductFromFile(FILE_PATH)
 }

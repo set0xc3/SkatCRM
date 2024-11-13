@@ -1,10 +1,22 @@
 package db
 
 type Product struct {
-	Id       string `db:"id" json:"id"`
-	Name     string `db:"name" json:"name"`
-	Price    string `db:"price" json:"price"`
-	Quantity int    `db:"quantity" json:"quantity"`
+	Id             string `db:"id" json:"id"`
+	Id2            string `db:"id2" json:"id2"`                           // № изделия
+	Name           string `db:"name" json:"name"`                         // Наименование
+	SerialNumber   string `db:"serial_number" json:"serial_number"`       // Серийный номер
+	Article        string `db:"article" json:"article"`                   // Артикул
+	Date           string `db:"date" json:"date"`                         // Дата
+	Quantity       string `db:"quantity" json:"quantity"`                 // Кол-во
+	RetailPrice    string `db:"retail_price" json:"retail_price"`         // Розничная цена
+	PurchasePrice  string `db:"purchase_price" json:"purchase_price"`     // Закупочная цена
+	ExchangeRatePC string `db:"exchange_rate_pc" json:"exchange_rate_pc"` // Курс ПК
+	ExchangeRatePR string `db:"exchange_rate_pr" json:"exchange_rate_pr"` // Курс ПР
+	Warehouse      string `db:"warehouse" json:"warehouse"`               // Склад
+	Location       string `db:"location" json:"location"`                 // Локация
+	CustomerOrder  string `db:"customer_order" json:"customer_order"`     // Заказ клиента
+	SupplierOrder  string `db:"supplier_order" json:"supplier_order"`     // Заказ поставщику
+	Supplier       string `db:"supplier" json:"supplier"`                 // Поставщик
 }
 
 type Client struct {
