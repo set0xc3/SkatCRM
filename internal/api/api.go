@@ -22,8 +22,8 @@ func FetchData(url string, result interface{}) error {
 	return json.NewDecoder(resp.Body).Decode(result)
 }
 
-func FetchClients() (data []db.Client) {
-	err := FetchData("http://localhost:8090/api/v1/clients", &data)
+func FetchClients(count string) (data []db.Client) {
+	err := FetchData("http://localhost:8090/api/v1/clients/"+count, &data)
 	if err != nil {
 		return nil
 	}

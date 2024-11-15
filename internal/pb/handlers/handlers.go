@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v5"
 	"github.com/set0xc3/htmx/internal/db"
@@ -83,9 +84,27 @@ func GetProduct(ctx *pb.PocketBase) echo.HandlerFunc {
 	}
 }
 
+func GetClientCount(ctx *pb.PocketBase) echo.HandlerFunc {
+	return func(c echo.Context) error {
+			collection, err := ctx.Dao().FindCollectionByNameOrId("client")
+		log.Println(collection)
+
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+		}
+
+		return c.JSON(http.StatusOK, "")
+	}
+}
+
 func GetClients(ctx *pb.PocketBase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		query := ctx.Dao().RecordQuery("client")
+		count, err := strconv.ParseInt(c.PathParam("count"), 10, 64)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Not Found"})
+		}
+
+		query := ctx.Dao().RecordQuery("client").Limit(count)
 		records := []models.Record{}
 
 		if err := query.All(&records); err != nil {

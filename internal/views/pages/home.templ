@@ -1,0 +1,19 @@
+package pages
+
+import "github.com/set0xc3/htmx/internal/model"
+
+templ Home_View() {
+<div class="navbar bg-base-100">
+	<div class="flex-1">
+		<a class="btn text-xl">View</a>
+	</div>
+</div>
+Hello!
+<button class="btn btn-primary">Button</button>
+}
+
+templ Home(model_ctx model.Context) {
+@Base_Page(model_ctx) {
+@Home_View()
+}
+}

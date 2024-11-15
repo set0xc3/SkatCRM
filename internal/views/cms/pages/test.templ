@@ -5,6 +5,7 @@
 package cms
 
 import (
+"github.com/set0xc3/htmx/internal"
 "github.com/set0xc3/htmx/internal/model"
 "github.com/set0xc3/htmx/internal/views/icons"
 )
@@ -13,32 +14,32 @@ import (
 var menuItems = []model.MenuItem{
 {
 Name: "Главная",
-URL: "/",
+URL: "",
 Icon: icons.HomeIcon,
 },
 {
 Name: "Клиенты",
-URL: "/clients",
+URL: "clients",
 Icon: icons.ClientsIcon,
 },
 {
 Name: "Звонки",
-URL: "/calls",
+URL: "calls",
 Icon: icons.CallsIcon,
 },
 {
 Name: "Заявки",
-URL: "/app",
+URL: "app",
 Icon: icons.AppIcon,
 },
 {
 Name: "Отчёты",
-URL: "/reports",
+URL: "reports",
 Icon: icons.ReportsIcon,
 },
 {
 Name: "Товары",
-URL: "/products",
+URL: "products",
 Icon: icons.WarehouseIcon,
 },
 }
@@ -49,7 +50,7 @@ templ SidebarComponent(items []model.MenuItem) {
 		for _, item := range items {
 		<li>
 			<a class={ "bg-[#F0F1F2] hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300 py-2 flex items-center h-[28px] rounded-[5px] pl-[5px]"
-				} hx-get={ item.URL } hx-swap="innerHTML" hx-target="main">
+				} href={ "#" + templ.SafeURL(item.URL) } hx-get={ "/" + item.URL } hx-swap="innerHTML" hx-target="main">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ item.Icon }></path>
 				</svg>
@@ -103,6 +104,8 @@ templ TEST_CMS_IndexPage() {
 			<p>This is where the main content goes.</p>
 		</main>
 	</div>
+
+	@internal.DEV_HotReload()
 </body>
 
 </html>

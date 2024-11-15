@@ -13,7 +13,12 @@ type Checkbox struct {
 }
 
 type MenuItem struct {
-	Name string
-	URL  string
-	Icon string
+	IsHot bool
+	Name  string
+	URL   string
+	Icon  string
+}
+
+type Context struct {
+	SidebarItems []MenuItem
 }

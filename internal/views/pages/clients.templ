@@ -1,8 +1,11 @@
 package pages
 
-import "github.com/set0xc3/htmx/internal/api"
+import (
+"github.com/set0xc3/htmx/internal/api"
+"github.com/set0xc3/htmx/internal/model"
+)
 
-templ ClientsTable() {
+templ view() {
 <div class="overflow-x-auto">
 	<table class="table">
 		<!-- head -->
@@ -16,7 +19,7 @@ templ ClientsTable() {
 			</tr>
 		</thead>
 		<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
-			for _, item := range api.FetchClients() {
+			for _, item := range api.FetchClients("10") {
 			<tr>
 				<td>{ item.Mark }</td>
 				<td>{ item.FullName }</td>
@@ -28,23 +31,18 @@ templ ClientsTable() {
 			}
 		</tbody>
 	</table>
+	<div class="join">
+		<button class="join-item btn">1</button>
+		<button class="join-item btn">2</button>
+		<button class="join-item btn btn-disabled">...</button>
+		<button class="join-item btn">99</button>
+		<button class="join-item btn">100</button>
+	</div>
 </div>
 }
 
-templ ClientsPage() {
-<!DOCTYPE html>
-<html data-theme="light" lang="en">
-
-<head>
-	<meta charset="utf-8" />
-	<title>MySite</title>
-	<link href="css/tw.css" rel="stylesheet" />
-	<script src="js/htmx.min.js"></script>
-</head>
-
-<body hx-boost="true">
-	@ClientsTable()
-</body>
-
-</html>
+templ Clients(model_ctx model.Context) {
+@Base_Page(model_ctx) {
+@view()
+}
 }
