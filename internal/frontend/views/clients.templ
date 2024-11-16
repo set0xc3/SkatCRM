@@ -1,11 +1,18 @@
-package pages
+package views
 
 import (
 "github.com/set0xc3/htmx/internal/api"
-"github.com/set0xc3/htmx/internal/model"
+"math"
+"strconv"
 )
 
-templ view() {
+// strconv.Itoa((api.FetchClientCount() + 9) / 10)
+
+func Test() int {
+return int(math.Min(float64(29), float64(10)))
+}
+
+templ Clients() {
 <div class="overflow-x-auto">
 	<table class="table">
 		<!-- head -->
@@ -32,17 +39,11 @@ templ view() {
 		</tbody>
 	</table>
 	<div class="join">
-		<button class="join-item btn">1</button>
-		<button class="join-item btn">2</button>
-		<button class="join-item btn btn-disabled">...</button>
-		<button class="join-item btn">99</button>
-		<button class="join-item btn">100</button>
+		for i:=0; i<Test(); i++ { 
+			<button class="join-item btn">
+				{ strconv.Itoa(i+1) }
+				</button>
+			}
 	</div>
 </div>
-}
-
-templ Clients(model_ctx model.Context) {
-@Base_Page(model_ctx) {
-@view()
-}
 }

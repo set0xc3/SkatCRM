@@ -86,14 +86,13 @@ func GetProduct(ctx *pb.PocketBase) echo.HandlerFunc {
 
 func GetClientCount(ctx *pb.PocketBase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-			collection, err := ctx.Dao().FindCollectionByNameOrId("client")
-		log.Println(collection)
+		records, err := ctx.Dao().FindRecordsByExpr("client")
 
 		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+			return c.JSON(http.StatusInternalServerError, err)
 		}
 
-		return c.JSON(http.StatusOK, "")
+		return c.JSON(http.StatusOK, len(records))
 	}
 }
 

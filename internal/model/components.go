@@ -12,13 +12,12 @@ type Checkbox struct {
 	Attrs   templ.Attributes
 }
 
-type MenuItem struct {
-	IsHot bool
+type SidebarItem struct {
 	Name  string
 	URL   string
 	Icon  string
 }
 
-type Context struct {
-	SidebarItems []MenuItem
+type Sidebar struct {
+	Items []SidebarItem
 }

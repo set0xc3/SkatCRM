@@ -30,6 +30,14 @@ func FetchClients(count string) (data []db.Client) {
 	return data
 }
 
+func FetchClientCount() (data int) {
+	err := FetchData("http://localhost:8090/api/v1/clients", &data)
+	if err != nil {
+		return 0
+	}
+	return data
+}
+
 func FetchProducts() (data []db.Product) {
 	err := FetchData("http://localhost:8090/api/v1/products", &data)
 	if err != nil {
