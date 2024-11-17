@@ -98,12 +98,10 @@ func GetClientCount(ctx *pb.PocketBase) echo.HandlerFunc {
 
 func GetClients(ctx *pb.PocketBase) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		count, err := strconv.ParseInt(c.PathParam("count"), 10, 64)
-		if err != nil {
-			return c.JSON(http.StatusInternalServerError, map[string]string{"message": "Not Found"})
-		}
+		count, _ := strconv.Atoi(c.PathParam("count"))
+		offset, _ := strconv.Atoi(c.PathParam("offset"))
 
-		query := ctx.Dao().RecordQuery("client").Limit(count)
+		query := ctx.Dao().RecordQuery("client").Limit(int64(count)).Offset(int64(offset))
 		records := []models.Record{}
 
 		if err := query.All(&records); err != nil {

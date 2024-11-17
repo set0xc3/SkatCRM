@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/set0xc3/htmx/internal/db"
 )
@@ -22,8 +23,8 @@ func FetchData(url string, result interface{}) error {
 	return json.NewDecoder(resp.Body).Decode(result)
 }
 
-func FetchClients(count string) (data []db.Client) {
-	err := FetchData("http://localhost:8090/api/v1/clients/"+count, &data)
+func FetchClients(count int, offset int) (data []db.Client) {
+	err := FetchData("http://localhost:8090/api/v1/clients/"+strconv.Itoa(count)+"/"+strconv.Itoa(offset), &data)
 	if err != nil {
 		return nil
 	}

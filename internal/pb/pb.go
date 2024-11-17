@@ -26,7 +26,7 @@ func Run() {
 		e.Router.DELETE("/api/v1/product/:id", handlers.DeleteProduct(ctx), apis.ActivityLogger(ctx))
 
 		e.Router.GET("/api/v1/clients", handlers.GetClientCount(ctx), apis.ActivityLogger(ctx))
-		e.Router.GET("/api/v1/clients/:count", handlers.GetClients(ctx), apis.ActivityLogger(ctx))
+		e.Router.GET("/api/v1/clients/:count/:offset", handlers.GetClients(ctx), apis.ActivityLogger(ctx))
 		e.Router.GET("/api/v1/client/:id", handlers.GetClient(ctx), apis.ActivityLogger(ctx))
 
 		e.Router.POST("/api/v1/client", handlers.PostAddClient(ctx), apis.ActivityLogger(ctx))

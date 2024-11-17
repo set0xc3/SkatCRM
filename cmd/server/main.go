@@ -1,10 +1,14 @@
 package main
 
 import (
+	"math"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
 	"github.com/set0xc3/htmx/internal"
+	"github.com/set0xc3/htmx/internal/api"
 	"github.com/set0xc3/htmx/internal/frontend"
 	"github.com/set0xc3/htmx/internal/frontend/views"
 	"github.com/set0xc3/htmx/internal/server"
@@ -29,7 +33,16 @@ func main() {
 		return handlers.Render(c, frontend.Layout(views.Home()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
-		return handlers.Render(c, frontend.Layout(views.Clients()))
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		pageMax := int(float64(api.FetchClientCount() / 10))
+
+		if page <= 0 {
+			page = 1
+		}
+
+		page = int(math.Min(float64(page), float64(pageMax)))
+
+		return handlers.Render(c, frontend.Layout(views.Clients(page)))
 	})
 
 	// Views
@@ -37,7 +50,16 @@ func main() {
 		return handlers.Render(c, views.Home())
 	})
 	e.GET("/views/clients", func(c echo.Context) error {
-		return handlers.Render(c, views.Clients())
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		pageMax := int(float64(api.FetchClientCount() / 10))
+
+		if page <= 0 {
+			page = 1
+		}
+
+		page = int(math.Min(float64(page), float64(pageMax)))
+
+		return handlers.Render(c, views.Clients(page))
 	})
 
 	// Misc
