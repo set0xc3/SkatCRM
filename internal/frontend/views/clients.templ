@@ -1,10 +1,9 @@
 package views
 
 import (
-"strconv"
-
-"github.com/set0xc3/htmx/internal/api"
-"github.com/set0xc3/htmx/internal/frontend/icons"
+	"github.com/set0xc3/htmx/internal/api"
+	"github.com/set0xc3/htmx/internal/frontend/icons"
+	"strconv"
 )
 
 func prevPage(currPage int) int {
@@ -28,76 +27,127 @@ func nextPage(currPage int) int {
 	return currPage
 }
 
+// getPages принимает номер текущей страницы и возвращает срез целых чисел,
+// представляющий страницы для навигации с выделением центральной страницы.
+func getPages(page int) []int {
+	// Получаем общее количество страниц, деля общее количество клиентов на 10.
+	totalPages := int(float64(api.FetchClientCount() / 10))
+
+	// Создаем срез для хранения страниц.
+	pages := []int{}
+
+	// Определяем начальную и конечную страницы для отображения.
+	start := page - 4 // Начинаем с 4 страниц до текущей.
+	end := page + 5   // Заканчиваем на 5 страниц после текущей.
+
+	// Корректируем начальную и конечную страницы, чтобы они не выходили за пределы.
+	if start < 1 {
+		start = 1 // Убедимся, что начальная страница не меньше 1.
+	}
+	if end > totalPages {
+		end = totalPages // Убедимся, что конечная страница не превышает totalPages.
+	}
+
+	// Если диапазон страниц меньше 10, корректируем начальную страницу.
+	if end-start < 9 {
+		if end == totalPages {
+			start = end - 9 // Если конечная страница последняя, устанавливаем начальную так, чтобы вмещалось 10 страниц.
+		} else {
+			end = start + 9 // Иначе, просто добавляем 9 страниц к началу.
+		}
+	}
+
+	// Заполняем срез страницами от start до end.
+	for i := start; i <= end; i++ {
+		pages = append(pages, i) // Добавляем страницу в срез.
+	}
+
+	return pages // Возвращаем срез страниц.
+}
+
 // strconv.Itoa((api.FetchClientCount() + 9) / 10)
 templ Clients(page int) {
-<div class="overflow-x-auto">
-	<table class="table">
-		<!-- head -->
-		<thead>
-			<tr>
-				<th>Метка</th>
-				<th>ФИО</th>
-				<th>Телефон</th>
-				<th>Адрес</th>
-				<th>Эл.почта</th>
-			</tr>
-		</thead>
-		<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
-			for _, item := range api.FetchClients(10, page * 10) {
-			<tr>
-				<td>{ item.Mark }</td>
-				<td>{ item.FullName }</td>
-				<td>{ item.Phones }</td>
-				<td>{ item.LegalAddress }</td>
-				<td>{ item.Email }</td>
-				<td><button class="btn" hx-delete={ "/api/v1/client/" + item.Id }>Delete</button></td>
-			</tr>
-			}
-		</tbody>
-	</table>
-	<div class="join">
-		<button class="join-item btn" hx-get={ "/views/clients?page=1" } hx-push-url={ "/clients?page=1" }
-			hx-swap="innerHTML" hx-target="main">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronDoubleLeft }></path>
-			</svg>
-		</button>
-			<button class="join-item btn" hx-get={ "/views/clients?page=" + strconv.Itoa(prevPage(page)) }
-			hx-push-url={ "/clients?page=" + strconv.Itoa(prevPage(page)) } hx-swap="innerHTML" hx-target="main">
-			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronLeft }></path>
-			</svg>
-		</button>
-		for i:=1; i<11; i++ { 
-			if i == 5 {
-				<button class="join-item btn bg-[#FF00FF]" hx-get={ "/views/clients?page=" + strconv.Itoa(i) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(i) } hx-swap="innerHTML" hx-target="main">
-				{ strconv.Itoa(i) }
+	<div class="overflow-x-auto">
+		<table class="table">
+			<!-- head -->
+			<thead>
+				<tr>
+					<th>Метка</th>
+					<th>ФИО</th>
+					<th>Телефон</th>
+					<th>Адрес</th>
+					<th>Эл.почта</th>
+				</tr>
+			</thead>
+			<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
+				for _, item := range api.FetchClients(10, page * 10) {
+					<tr>
+						<td>{ item.Mark }</td>
+						<td>{ item.FullName }</td>
+						<td>{ item.Phones }</td>
+						<td>{ item.LegalAddress }</td>
+						<td>{ item.Email }</td>
+						<td><button class="btn" hx-delete={ "/api/v1/client/" + item.Id }>Delete</button></td>
+					</tr>
+				}
+			</tbody>
+		</table>
+		<div class="join">
+			<button
+				class="join-item btn"
+				hx-get={ "/views/clients?page=1" }
+				hx-push-url={ "/clients?page=1" }
+				hx-swap="innerHTML"
+				hx-target="main"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronDoubleLeft }></path>
+				</svg>
+			</button>
+			<button
+				class="join-item btn"
+				hx-get={ "/views/clients?page=" + strconv.Itoa(prevPage(page)) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(prevPage(page)) }
+				hx-swap="innerHTML"
+				hx-target="main"
+			>
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronLeft }></path>
+				</svg>
+			</button>
+			for _, pages := range getPages(page) {
+				<button
+					class="join-item btn"
+					hx-get={ "/views/clients?page=" + strconv.Itoa(pages) }
+					hx-push-url={ "/clients?page=" + strconv.Itoa(pages) }
+					hx-swap="innerHTML"
+					hx-target="main"
+				>
+					{ strconv.Itoa(pages) }
 				</button>
-			} else if i > 5 {
-				<button class="join-item btn" hx-get={ "/views/clients?page=" + strconv.Itoa(i) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(i) } hx-swap="innerHTML" hx-target="main">
-				{ strconv.Itoa(i) }
-				</button>
-			} else {
-				<button class="join-item btn" hx-get={ "/views/clients?page=" + strconv.Itoa(i) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(i) } hx-swap="innerHTML" hx-target="main">
-				{ strconv.Itoa(i) }
-				</button>
 			}
-			}
-			<button class="join-item btn" hx-get={ "/views/clients?page=" + strconv.Itoa(nextPage(page)) }
-			hx-push-url={ "/clients?page=" + strconv.Itoa(nextPage(page)) } hx-swap="innerHTML" hx-target="main">
+			<button
+				class="join-item btn"
+				hx-get={ "/views/clients?page=" + strconv.Itoa(nextPage(page)) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(nextPage(page)) }
+				hx-swap="innerHTML"
+				hx-target="main"
+			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronRight }></path>
 				</svg>
 			</button>
-			<button class="join-item btn" hx-get={ "/views/clients?page=" + strconv.Itoa(api.FetchClientCount() / 10) }
-			hx-push-url={ "/clients?page=" + strconv.Itoa(api.FetchClientCount() / 10) } hx-swap="innerHTML" hx-target="main">
+			<button
+				class="join-item btn"
+				hx-get={ "/views/clients?page=" + strconv.Itoa(api.FetchClientCount()/10) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(api.FetchClientCount()/10) }
+				hx-swap="innerHTML"
+				hx-target="main"
+			>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronDoubleRight }></path>
 				</svg>
 			</button>
+		</div>
 	</div>
-</div>
 }
