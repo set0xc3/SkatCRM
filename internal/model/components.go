@@ -13,9 +13,9 @@ type Checkbox struct {
 }
 
 type SidebarItem struct {
-	Name  string
-	URL   string
-	Icon  string
+	Name string
+	URL  string
+	Icon string
 }
 
 type Sidebar struct {

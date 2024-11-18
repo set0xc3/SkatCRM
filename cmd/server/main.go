@@ -32,6 +32,9 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return handlers.Render(c, frontend.Layout(views.Home()))
 	})
+	e.GET("/test", func(c echo.Context) error {
+		return handlers.Render(c, frontend.Layout(views.Test()))
+	})
 	e.GET("/clients", func(c echo.Context) error {
 		page, _ := strconv.Atoi(c.QueryParam("page"))
 		pageMax := int(float64(api.FetchClientCount() / 10))

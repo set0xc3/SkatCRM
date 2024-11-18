@@ -11,7 +11,7 @@
 	- `go get -u github.com/golang-jwt/jwt`
     - `go get -u github.com/xuri/excelize/v2`
 - Install Templ CLI:
-	- `go install github.com/a-h/templ/cmd/templ@latest`
+    - `go install github.com/a-h/templ/cmd/templ@latest`
 - Install TailwindCSS and DaisyUI:
 	- `npm i -D tailwindcss @tailwindcss/typography daisyui`
 - Initialize TailwindCSS:

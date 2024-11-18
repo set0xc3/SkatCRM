@@ -15,7 +15,5 @@ var WarehouseIcon = "m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5
 var ChevronLeft = "M15.75 19.5 8.25 12l7.5-7.5"
 var ChevronDoubleLeft = "m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
 
-
 var ChevronRight = "m8.25 4.5 7.5 7.5-7.5 7.5"
 var ChevronDoubleRight = "m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-

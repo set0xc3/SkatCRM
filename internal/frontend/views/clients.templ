@@ -6,6 +6,8 @@ import (
 	"strconv"
 )
 
+var pageLimit int = 10
+
 func prevPage(currPage int) int {
 	if currPage-1 <= 0 {
 		currPage = 1
@@ -17,7 +19,7 @@ func prevPage(currPage int) int {
 }
 
 func nextPage(currPage int) int {
-	pageMax := int(float64(api.FetchClientCount() / 10))
+	pageMax := int(float64(api.FetchClientCount() / pageLimit))
 	if currPage+1 > pageMax {
 		currPage = pageMax
 	} else {
@@ -31,7 +33,7 @@ func nextPage(currPage int) int {
 // представляющий страницы для навигации с выделением центральной страницы.
 func getPages(page int) []int {
 	// Получаем общее количество страниц, деля общее количество клиентов на 10.
-	totalPages := int(float64(api.FetchClientCount() / 10))
+	totalPages := int(float64(api.FetchClientCount() / pageLimit))
 
 	// Создаем срез для хранения страниц.
 	pages := []int{}
@@ -49,11 +51,11 @@ func getPages(page int) []int {
 	}
 
 	// Если диапазон страниц меньше 10, корректируем начальную страницу.
-	if end-start < 9 {
+	if end-start < pageLimit-1 {
 		if end == totalPages {
-			start = end - 9 // Если конечная страница последняя, устанавливаем начальную так, чтобы вмещалось 10 страниц.
+			start = end - pageLimit - 1 // Если конечная страница последняя, устанавливаем начальную так, чтобы вмещалось 10 страниц.
 		} else {
-			end = start + 9 // Иначе, просто добавляем 9 страниц к началу.
+			end = start + pageLimit - 1 // Иначе, просто добавляем 9 страниц к началу.
 		}
 	}
 
@@ -68,7 +70,7 @@ func getPages(page int) []int {
 // strconv.Itoa((api.FetchClientCount() + 9) / 10)
 templ Clients(page int) {
 	<div class="overflow-x-auto">
-		<table class="table">
+		<table class="table table-xs">
 			<!-- head -->
 			<thead>
 				<tr>
@@ -80,7 +82,7 @@ templ Clients(page int) {
 				</tr>
 			</thead>
 			<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
-				for _, item := range api.FetchClients(10, page * 10) {
+				for _, item := range api.FetchClients(pageLimit, page * pageLimit) {
 					<tr>
 						<td>{ item.Mark }</td>
 						<td>{ item.FullName }</td>
@@ -139,8 +141,8 @@ templ Clients(page int) {
 			</button>
 			<button
 				class="join-item btn"
-				hx-get={ "/views/clients?page=" + strconv.Itoa(api.FetchClientCount()/10) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(api.FetchClientCount()/10) }
+				hx-get={ "/views/clients?page=" + strconv.Itoa(api.FetchClientCount()/pageLimit) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(api.FetchClientCount()/pageLimit) }
 				hx-swap="innerHTML"
 				hx-target="main"
 			>

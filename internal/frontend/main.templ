@@ -1,65 +1,62 @@
 package frontend
 
 import (
-"github.com/set0xc3/htmx/internal/frontend/components"
-"github.com/set0xc3/htmx/internal/frontend/icons"
-"github.com/set0xc3/htmx/internal/model"
+	"github.com/set0xc3/htmx/internal/frontend/components"
+	"github.com/set0xc3/htmx/internal/frontend/icons"
+	"github.com/set0xc3/htmx/internal/model"
 )
 
 var sidebarItems = []model.SidebarItem{
-{
-Name: "Главная",
-URL: "",
-Icon: icons.HomeIcon,
-},
-{
-Name: "Клиенты",
-URL: "clients",
-Icon: icons.ClientsIcon,
-},
-{
-Name: "Звонки",
-URL: "calls",
-Icon: icons.CallsIcon,
-},
-{
-Name: "Заказы",
-URL: "orders",
-Icon: icons.OrdersIcon,
-},
-{
-Name: "Отчёты",
-URL: "reports",
-Icon: icons.ReportsIcon,
-},
-{
-Name: "Товары",
-URL: "products",
-Icon: icons.WarehouseIcon,
-},
+	{
+		Name: "Главная",
+		URL:  "",
+		Icon: icons.HomeIcon,
+	},
+	{
+		Name: "Клиенты",
+		URL:  "clients",
+		Icon: icons.ClientsIcon,
+	},
+	{
+		Name: "Звонки",
+		URL:  "calls",
+		Icon: icons.CallsIcon,
+	},
+	{
+		Name: "Заказы",
+		URL:  "orders",
+		Icon: icons.OrdersIcon,
+	},
+	{
+		Name: "Отчёты",
+		URL:  "reports",
+		Icon: icons.ReportsIcon,
+	},
+	{
+		Name: "Товары",
+		URL:  "products",
+		Icon: icons.WarehouseIcon,
+	},
 }
 
 templ Layout(view templ.Component) {
-<!DOCTYPE html>
-<html data-theme="light" lang="en">
-
-<head>
-	<meta charset="utf-8" />
-	<title>MySite</title>
-	<link href="css/tw.css" rel="stylesheet" />
-	<script src="js/htmx.min.js"></script>
-</head>
-
-<body hx-boost="true" class="flex flex-col h-full gap-[2px] bg-[#CDD2D6]">
-	@components.Navbar()
-	<div class="flex flex-1 gap-[2px]">
-		@components.Sidebar(sidebarItems)
-		<!-- Main Content -->
-		<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white">
-			@view
-		</main>
-	</div>
-</body>
-
-</html>
+	<!DOCTYPE html>
+	<html data-theme="light" lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<title>MySite</title>
+			<link href="css/tw.css" rel="stylesheet"/>
+			<script src="js/htmx.min.js"></script>
+		</head>
+		<body hx-boost="true" class="flex flex-col h-full gap-[2px] bg-[#CDD2D6]">
+			@components.Navbar()
+			<div class="flex flex-1 gap-[2px]">
+				@components.Sidebar(sidebarItems)
+				<!-- Main Content -->
+				<main class="bg-base-200 rounded-[5px] flex-1 p-4 gap-[2px] bg-white">
+					@view
+				</main>
+			</div>
+		</body>
+	</html>
 }
