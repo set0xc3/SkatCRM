@@ -3,77 +3,83 @@ package views
 import (
 	"github.com/set0xc3/htmx/internal/api"
 	"github.com/set0xc3/htmx/internal/frontend/icons"
+	"math"
 	"strconv"
 )
 
-var pageLimit int = 10
+const pageLimit = 10
+
+func clampInt(min, max, val int) int {
+	if val < min {
+		return min
+	} else if val > max {
+		return max
+	}
+	return val
+}
 
 func prevPage(currPage int) int {
-	if currPage-1 <= 0 {
-		currPage = 1
-	} else {
-		currPage--
+	if currPage-1 < 1 {
+		return 1
 	}
-
-	return currPage
+	return currPage - 1
 }
 
-func nextPage(currPage int) int {
-	pageMax := int(float64(api.FetchClientCount() / pageLimit))
-	if currPage+1 > pageMax {
-		currPage = pageMax
-	} else {
-		currPage++
+func nextPage(currPage int, clientCount int) int {
+	totalPages := int(math.Ceil(float64(clientCount) / pageLimit))
+	if currPage+1 > totalPages {
+		return totalPages
 	}
-
-	return currPage
+	return currPage + 1
 }
 
-// getPages принимает номер текущей страницы и возвращает срез целых чисел,
-// представляющий страницы для навигации с выделением центральной страницы.
-func getPages(page int) []int {
-	// Получаем общее количество страниц, деля общее количество клиентов на 10.
-	totalPages := int(float64(api.FetchClientCount() / pageLimit))
+func getPages(currPage, clientCount int) []int {
+	if clientCount <= 0 {
+		return []int{}
+	}
 
-	// Создаем срез для хранения страниц.
+	var totalPages int
+	if clientCount < 10 {
+		totalPages = 1
+	} else {
+		totalPages = int(math.Ceil(float64(clientCount) / pageLimit))
+	}
+
 	pages := []int{}
 
-	// Определяем начальную и конечную страницы для отображения.
-	start := page - 4 // Начинаем с 4 страниц до текущей.
-	end := page + 5   // Заканчиваем на 5 страниц после текущей.
+	start := currPage - 4
+	end := currPage + 5
 
-	// Корректируем начальную и конечную страницы, чтобы они не выходили за пределы.
 	if start < 1 {
-		start = 1 // Убедимся, что начальная страница не меньше 1.
+		start = 1
 	}
 	if end > totalPages {
-		end = totalPages // Убедимся, что конечная страница не превышает totalPages.
+		end = totalPages
 	}
 
-	// Если диапазон страниц меньше 10, корректируем начальную страницу.
 	if end-start < pageLimit-1 {
 		if end == totalPages {
-			start = end - pageLimit - 1 // Если конечная страница последняя, устанавливаем начальную так, чтобы вмещалось 10 страниц.
+			start = clampInt(1, totalPages-pageLimit+1, end-pageLimit+1)
 		} else {
-			end = start + pageLimit - 1 // Иначе, просто добавляем 9 страниц к началу.
+			end = clampInt(start+pageLimit-1, totalPages, start+pageLimit-1)
 		}
 	}
 
-	// Заполняем срез страницами от start до end.
 	for i := start; i <= end; i++ {
-		pages = append(pages, i) // Добавляем страницу в срез.
+		pages = append(pages, i)
 	}
 
-	return pages // Возвращаем срез страниц.
+	return pages
 }
 
-// strconv.Itoa((api.FetchClientCount() + 9) / 10)
-templ Clients(page int) {
+templ ClientsWrap(currPage, clientCount int) {
 	<div class="overflow-x-auto">
 		<table class="table table-xs">
 			<!-- head -->
 			<thead>
 				<tr>
+					<th>Id</th>
+					<th>Id2</th>
 					<th>Метка</th>
 					<th>ФИО</th>
 					<th>Телефон</th>
@@ -82,8 +88,12 @@ templ Clients(page int) {
 				</tr>
 			</thead>
 			<tbody hx-confirm="Вы уверены?" hx-target="closest tr">
-				for _, item := range api.FetchClients(pageLimit, page * pageLimit) {
+				{{ offset := currPage * pageLimit }}
+				{{ clients := api.FetchClients(pageLimit, offset) }}
+				for _, item := range clients {
 					<tr>
+						<td>{ item.Id }</td>
+						<td>{ item.Id2 }</td>
 						<td>{ item.Mark }</td>
 						<td>{ item.FullName }</td>
 						<td>{ item.Phones }</td>
@@ -108,8 +118,8 @@ templ Clients(page int) {
 			</button>
 			<button
 				class="join-item btn"
-				hx-get={ "/views/clients?page=" + strconv.Itoa(prevPage(page)) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(prevPage(page)) }
+				hx-get={ "/views/clients?page=" + strconv.Itoa(prevPage(currPage)) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(prevPage(currPage)) }
 				hx-swap="innerHTML"
 				hx-target="main"
 			>
@@ -117,21 +127,21 @@ templ Clients(page int) {
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronLeft }></path>
 				</svg>
 			</button>
-			for _, pages := range getPages(page) {
+			for _, page := range getPages(currPage, clientCount) {
 				<button
 					class="join-item btn"
-					hx-get={ "/views/clients?page=" + strconv.Itoa(pages) }
-					hx-push-url={ "/clients?page=" + strconv.Itoa(pages) }
+					hx-get={ "/views/clients?page=" + strconv.Itoa(page) }
+					hx-push-url={ "/clients?page=" + strconv.Itoa(page) }
 					hx-swap="innerHTML"
 					hx-target="main"
 				>
-					{ strconv.Itoa(pages) }
+					{ strconv.Itoa(page) }
 				</button>
 			}
 			<button
 				class="join-item btn"
-				hx-get={ "/views/clients?page=" + strconv.Itoa(nextPage(page)) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(nextPage(page)) }
+				hx-get={ "/views/clients?page=" + strconv.Itoa(nextPage(currPage+1, clientCount)) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(nextPage(currPage+1, clientCount)) }
 				hx-swap="innerHTML"
 				hx-target="main"
 			>
@@ -141,8 +151,8 @@ templ Clients(page int) {
 			</button>
 			<button
 				class="join-item btn"
-				hx-get={ "/views/clients?page=" + strconv.Itoa(api.FetchClientCount()/pageLimit) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(api.FetchClientCount()/pageLimit) }
+				hx-get={ "/views/clients?page=" + strconv.Itoa(int(math.Ceil(float64(clientCount)/pageLimit))) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(int(math.Ceil(float64(clientCount)/pageLimit))) }
 				hx-swap="innerHTML"
 				hx-target="main"
 			>
@@ -152,4 +162,17 @@ templ Clients(page int) {
 			</button>
 		</div>
 	</div>
+}
+
+templ Clients(currPage int) {
+	{{ clientCount := api.FetchClientCount() }}
+	if clientCount > 0 {
+		if currPage < 0 {
+			{{ currPage = 0 }}
+		}
+		if currPage == 1 {
+			{{ currPage = 0 }}
+		}
+		@ClientsWrap(currPage, clientCount)
+	}
 }
