@@ -15,6 +15,17 @@ import (
 	"github.com/set0xc3/htmx/internal/server/handlers"
 )
 
+func getValidPageNumber(page int) int {
+	pageLimit := 10
+	if page <= 0 {
+		page = 1
+	}
+
+	pageMax := int(math.Ceil(float64(api.FetchClientCount()) / float64(pageLimit)))
+	page = int(math.Min(float64(page), float64(pageMax)))
+	return page
+}
+
 func main() {
 	s := server.New()
 
@@ -36,17 +47,19 @@ func main() {
 		return handlers.Render(c, frontend.Layout(views.Test()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
-		pageLimit := 10
 		page, _ := strconv.Atoi(c.QueryParam("page"))
-		pageMax := int(math.Ceil(float64(api.FetchClientCount()) / float64(pageLimit)))
-
-		if page <= 0 {
-			page = 1
-		}
-
-		page = int(math.Min(float64(page), float64(pageMax)))
-
+		page = getValidPageNumber(page)
 		return handlers.Render(c, frontend.Layout(views.Clients(page)))
+	})
+	e.GET("/orders", func(c echo.Context) error {
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		page = getValidPageNumber(page)
+		return handlers.Render(c, frontend.Layout(views.Orders(page)))
+	})
+	e.GET("/calls", func(c echo.Context) error {
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		page = getValidPageNumber(page)
+		return handlers.Render(c, frontend.Layout(views.Calls(page)))
 	})
 
 	// Views
@@ -54,17 +67,19 @@ func main() {
 		return handlers.Render(c, views.Home())
 	})
 	e.GET("/views/clients", func(c echo.Context) error {
-		pageLimit := 10
 		page, _ := strconv.Atoi(c.QueryParam("page"))
-		pageMax := int(math.Ceil(float64(api.FetchClientCount()) / float64(pageLimit)))
-
-		if page <= 0 {
-			page = 1
-		}
-
-		page = int(math.Min(float64(page), float64(pageMax)))
-
+		page = getValidPageNumber(page)
 		return handlers.Render(c, views.Clients(page))
+	})
+	e.GET("/views/orders", func(c echo.Context) error {
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		page = getValidPageNumber(page)
+		return handlers.Render(c, views.Orders(page))
+	})
+	e.GET("/views/calls", func(c echo.Context) error {
+		page, _ := strconv.Atoi(c.QueryParam("page"))
+		page = getValidPageNumber(page)
+		return handlers.Render(c, views.Calls(page))
 	})
 
 	// Misc

@@ -5,7 +5,7 @@ import (
 	"github.com/set0xc3/htmx/internal/frontend/components"
 )
 
-templ ClientsWrap(currPage, clientCount int) {
+templ OrdersWrap(currPage, itemCount int) {
 	<div class="overflow-x-auto">
 		<table class="table table-xs">
 			<!-- head -->
@@ -37,16 +37,16 @@ templ ClientsWrap(currPage, clientCount int) {
 				}
 			</tbody>
 		</table>
-		@components.Pagination(currPage, clientCount, "/views/clients")
+		@components.Pagination(currPage, itemCount, "/views/clients")
 	</div>
 }
 
-templ Clients(currPage int) {
-	{{ clientCount := api.FetchClientCount() }}
-	if clientCount > 0 {
+templ Orders(currPage int) {
+	{{ itemCount := api.FetchClientCount() }}
+	if itemCount > 0 {
 		if currPage < 0 {
 			{{ currPage = 0 }}
 		}
-		@ClientsWrap(currPage-1, clientCount)
+		@OrdersWrap(currPage-1, itemCount)
 	}
 }

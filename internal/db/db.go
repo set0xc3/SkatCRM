@@ -39,3 +39,8 @@ type Client struct {
 	Birthday         string `db:"birthday" json:"birthday"`
 	Income           string `db:"income" json:"income"`
 }
+
+type Call struct {
+	Id               string `db:"id" json:"id"`
+	Id2              string `db:"id2" json:"id2"`
+}
