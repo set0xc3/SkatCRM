@@ -36,8 +36,9 @@ func main() {
 		return handlers.Render(c, frontend.Layout(views.Test()))
 	})
 	e.GET("/clients", func(c echo.Context) error {
+		pageLimit := 10
 		page, _ := strconv.Atoi(c.QueryParam("page"))
-		pageMax := int(float64(api.FetchClientCount() / 10))
+		pageMax := int(math.Ceil(float64(api.FetchClientCount()) / float64(pageLimit)))
 
 		if page <= 0 {
 			page = 1
@@ -53,8 +54,9 @@ func main() {
 		return handlers.Render(c, views.Home())
 	})
 	e.GET("/views/clients", func(c echo.Context) error {
+		pageLimit := 10
 		page, _ := strconv.Atoi(c.QueryParam("page"))
-		pageMax := int(float64(api.FetchClientCount() / 10))
+		pageMax := int(math.Ceil(float64(api.FetchClientCount()) / float64(pageLimit)))
 
 		if page <= 0 {
 			page = 1

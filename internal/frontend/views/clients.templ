@@ -9,60 +9,43 @@ import (
 
 const pageLimit = 10
 
-func clampInt(min, max, val int) int {
-	if val < min {
-		return min
-	} else if val > max {
-		return max
-	}
-	return val
-}
-
 func prevPage(currPage int) int {
-	if currPage-1 < 1 {
+	if currPage < 1 {
 		return 1
 	}
-	return currPage - 1
+	return currPage
 }
 
 func nextPage(currPage int, clientCount int) int {
-	totalPages := int(math.Ceil(float64(clientCount) / pageLimit))
-	if currPage+1 > totalPages {
+	totalPages := int(math.Ceil(float64(clientCount) / float64(pageLimit)))
+	if currPage+2 > totalPages {
 		return totalPages
 	}
-	return currPage + 1
+	return currPage + 2
+}
+
+func clampInt(min, max, value int) int {
+	if value < min {
+		return min
+	}
+	if value > max {
+		return max
+	}
+	return value
 }
 
 func getPages(currPage, clientCount int) []int {
-	if clientCount <= 0 {
-		return []int{}
-	}
-
-	var totalPages int
-	if clientCount < 10 {
-		totalPages = 1
-	} else {
-		totalPages = int(math.Ceil(float64(clientCount) / pageLimit))
-	}
+	totalPages := int(math.Ceil(float64(clientCount) / float64(pageLimit)))
 
 	pages := []int{}
 
-	start := currPage - 4
-	end := currPage + 5
+	start := clampInt(1, totalPages, currPage-4)
+	end := clampInt(1, totalPages, currPage+5)
 
-	if start < 1 {
-		start = 1
-	}
-	if end > totalPages {
-		end = totalPages
-	}
-
-	if end-start < pageLimit-1 {
-		if end == totalPages {
-			start = clampInt(1, totalPages-pageLimit+1, end-pageLimit+1)
-		} else {
-			end = clampInt(start+pageLimit-1, totalPages, start+pageLimit-1)
-		}
+	if end == totalPages {
+		start = clampInt(1, totalPages-pageLimit+1, end-pageLimit+1)
+	} else {
+		end = clampInt(start+pageLimit-1, totalPages, start+pageLimit-1)
 	}
 
 	for i := start; i <= end; i++ {
@@ -127,7 +110,7 @@ templ ClientsWrap(currPage, clientCount int) {
 					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d={ icons.ChevronLeft }></path>
 				</svg>
 			</button>
-			for _, page := range getPages(currPage, clientCount) {
+			for _, page := range getPages(currPage+1, clientCount) {
 				<button
 					class="join-item btn"
 					hx-get={ "/views/clients?page=" + strconv.Itoa(page) }
@@ -140,8 +123,8 @@ templ ClientsWrap(currPage, clientCount int) {
 			}
 			<button
 				class="join-item btn"
-				hx-get={ "/views/clients?page=" + strconv.Itoa(nextPage(currPage+1, clientCount)) }
-				hx-push-url={ "/clients?page=" + strconv.Itoa(nextPage(currPage+1, clientCount)) }
+				hx-get={ "/views/clients?page=" + strconv.Itoa(nextPage(currPage, clientCount)) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(nextPage(currPage, clientCount)) }
 				hx-swap="innerHTML"
 				hx-target="main"
 			>
@@ -170,9 +153,6 @@ templ Clients(currPage int) {
 		if currPage < 0 {
 			{{ currPage = 0 }}
 		}
-		if currPage == 1 {
-			{{ currPage = 0 }}
-		}
-		@ClientsWrap(currPage, clientCount)
+		@ClientsWrap(currPage-1, clientCount)
 	}
 }
