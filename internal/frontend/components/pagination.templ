@@ -62,8 +62,8 @@ templ Pagination(currPage int, itemCount int, baseURL string) {
 	<div class="join">
 		<button
 			class="join-item btn"
-			hx-get={ baseURL + "?page=1" }
-			hx-push-url={ baseURL + "?page=1" }
+			hx-get={ "/views/clients?page=1" }
+			hx-push-url={ "/clients?page=1" }
 			hx-swap="innerHTML"
 			hx-target="main"
 		>
@@ -73,8 +73,8 @@ templ Pagination(currPage int, itemCount int, baseURL string) {
 		</button>
 		<button
 			class="join-item btn"
-			hx-get={ baseURL + "?page=" + strconv.Itoa(PrevPage(currPage)) }
-			hx-push-url={ baseURL + "?page=" + strconv.Itoa(PrevPage(currPage)) }
+			hx-get={ "/views/clients?page=" + strconv.Itoa(PrevPage(currPage)) }
+			hx-push-url={ "/clients?page=" + strconv.Itoa(PrevPage(currPage)) }
 			hx-swap="innerHTML"
 			hx-target="main"
 		>
@@ -85,8 +85,8 @@ templ Pagination(currPage int, itemCount int, baseURL string) {
 		for _, page := range GetPages(currPage+1, itemCount) {
 			<button
 				class="join-item btn"
-				hx-get={ baseURL + "?page=" + strconv.Itoa(page) }
-				hx-push-url={ baseURL + "?page=" + strconv.Itoa(page) }
+				hx-get={ "/views/clients?page=" + strconv.Itoa(page) }
+				hx-push-url={ "/clients?page=" + strconv.Itoa(page) }
 				hx-swap="innerHTML"
 				hx-target="main"
 			>
@@ -95,8 +95,8 @@ templ Pagination(currPage int, itemCount int, baseURL string) {
 		}
 		<button
 			class="join-item btn"
-			hx-get={ baseURL + "?page=" + strconv.Itoa(NextPage(currPage, itemCount)) }
-			hx-push-url={ baseURL + "?page=" + strconv.Itoa(NextPage(currPage, itemCount)) }
+			hx-get={ "/views/clients?page=" + strconv.Itoa(NextPage(currPage, itemCount)) }
+			hx-push-url={ "/clients?page=" + strconv.Itoa(NextPage(currPage, itemCount)) }
 			hx-swap="innerHTML"
 			hx-target="main"
 		>
@@ -106,8 +106,8 @@ templ Pagination(currPage int, itemCount int, baseURL string) {
 		</button>
 		<button
 			class="join-item btn"
-			hx-get={ baseURL + "?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit))) }
-			hx-push-url={ baseURL + "?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit))) }
+			hx-get={ "/views/clients?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit))) }
+			hx-push-url={ "/clients?page=" + strconv.Itoa(int(math.Ceil(float64(itemCount)/PageLimit))) }
 			hx-swap="innerHTML"
 			hx-target="main"
 		>
