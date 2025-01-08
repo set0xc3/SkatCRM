@@ -71,6 +71,9 @@ func main() {
 		page = getValidPageNumber(page)
 		return handlers.Render(c, views.Clients(page))
 	})
+	e.GET("/views/clients/new", func(c echo.Context) error {
+		return handlers.Render(c, views.ClientForm())
+	})
 	e.GET("/views/orders", func(c echo.Context) error {
 		page, _ := strconv.Atoi(c.QueryParam("page"))
 		page = getValidPageNumber(page)

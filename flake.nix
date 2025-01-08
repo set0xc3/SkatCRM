@@ -19,6 +19,7 @@
       LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath libs}";
 
       packages = with pkgs; [
+        templ
         nodejs_22
         jq
         templ
